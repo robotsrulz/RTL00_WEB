@@ -451,6 +451,16 @@ extern int ina219_ws(TCP_SERV_CONN *ts_conn, char cmd);
         	  }
         }
 #endif
+#ifdef WEB_ADC_DRV
+        else ifcmp("adc") {
+        	  if(CheckSCB(SCB_WEBSOC)) {
+extern int adc_ws(TCP_SERV_CONN *ts_conn, char cmd);
+				  int x = adc_ws(ts_conn, cstr[6]);
+        		  if(x < 0) SetSCB(SCB_FCLOSE|SCB_DISCONNECT);
+        		  else tcp_puts("%d", x);
+        	  }
+        }
+#endif
         else ifcmp("cfg_") {
 			cstr += 4;
 			ifcmp("web_") {
@@ -509,7 +519,6 @@ extern int ina219_ws(TCP_SERV_CONN *ts_conn, char cmd);
               else ifcmp("gw") 		tcp_puts(IPSTR, IP2STR(&wifi_ap_dhcp.gw));
               else ifcmp("msk") 	tcp_puts(IPSTR, IP2STR(&wifi_ap_dhcp.mask));
               else ifcmp("cip") 	tcp_puts(IPSTR, IP2STR(&xnetif[WLAN_ST_NETIF_NUM].ip_addr.addr));
-
     //        else ifcmp("mac") 	strtomac(pvar, wifi_ap_cfg.macaddr);
     //    	  else ifcmp("sip") 	tcp_puts(IPSTR, IP2STR(&wifi_ap_dhcp.start_ip));
     //    	  else ifcmp("eip") 	tcp_puts(IPSTR, IP2STR(&wifi_ap_dhcp.end_ip));

@@ -148,8 +148,8 @@ void ICACHE_FLASH_ATTR web_int_vars(TCP_SERV_CONN *ts_conn, uint8 *pcmd, uint8 *
 		else ifcmp("pinclr") syscfg.cfg.b.pin_clear_cfg_enable = (val)? 1 : 0;
 		else ifcmp("sleep") {
 			syscfg.cfg.b.powersave_enable = (val)? 1 : 0;
-			if(val) pmu_release_wakelock(~WAKELOCK_WLAN);
-			else pmu_acquire_wakelock(~WAKELOCK_WLAN);
+			if(val) release_wakelock(~WAKELOCK_WLAN);
+			else acquire_wakelock(~WAKELOCK_WLAN);
 		}
 		else ifcmp("debug") {
 			syscfg.cfg.b.debug_print_enable = val;
@@ -197,6 +197,8 @@ void ICACHE_FLASH_ATTR web_int_vars(TCP_SERV_CONN *ts_conn, uint8 *pcmd, uint8 *
       else ifcmp("txpow") 	wifi_cfg.tx_pwr = val;
       else ifcmp("adpt")  	wifi_cfg.adaptivity = val;
       else ifcmp("country") wifi_cfg.country_code = val;
+      // .. mac wifi_set_mac_address()
+
 //      else ifcmp("scan") {
 //    	  web_conn->web_disc_par = val;
 //    	  web_conn->web_disc_cb = (web_func_disc_cb)wifi_start_scan;

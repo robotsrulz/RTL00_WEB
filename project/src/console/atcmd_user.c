@@ -283,6 +283,16 @@ LOCAL void fATLW(int argc, char *argv[]) 	// Info Lwip
 	print_udp_pcb();
 	print_tcp_pcb();
 }
+
+//------------------------------------------------------------------------------
+// GPIO Info
+//------------------------------------------------------------------------------
+LOCAL void fATGI(int argc, char *argv[])
+{
+    int i;
+	for (i = 0; i < _PORT_MAX; i++)
+		printf("Port %c state: 0x%04x\n", i + 'A', GPIOState[i]);
+}
 //------------------------------------------------------------------------------
 // Deep sleep
 //------------------------------------------------------------------------------
@@ -290,7 +300,7 @@ LOCAL void fATDS(int argc, char *argv[])
 {
     uint32 sleep_ms = 10000;
     if(argc > 1) sleep_ms = atoi(argv[1]);
-#if 0    
+#if 0 // WakeUp PB_1
     if(argc > 2) {
             printf("%u ms waiting low level on PB_1 before launching Deep-Sleep...\n", sleep_ms);
             // turn off log uart
@@ -333,12 +343,12 @@ LOCAL void fATSP(int argc, char *argv[])
 		switch (argv[1][0]) {
 		case 'a': // acquire
 		{
-			pmu_acquire_wakelock(atoi(argv[2]));
+			acquire_wakelock(atoi(argv[2]));
 			break;
 		}
 		case 'r': // release
 		{
-			pmu_release_wakelock(atoi(argv[2]));
+			release_wakelock(atoi(argv[2]));
 			break;
 		}
 		};
@@ -350,6 +360,7 @@ LOCAL void fATSP(int argc, char *argv[])
 MON_RAM_TAB_SECTION COMMAND_TABLE console_commands_at[] = {
 		{"ATST", 0, fATST, ": Memory info"},
 		{"ATLW", 0, fATLW, ": LwIP Info"},
+		{"ATGI", 0, fATGI, ": GPIO Info"},
 		{"ATSB", 1, fATSB, "=<ADDRES(hex)>[,COUNT(dec)]: Dump byte register"},
 		{"ATSD", 1, fATSD, "=<ADDRES(hex)>[,COUNT(dec)]: Dump dword register"},
 		{"ATSW", 2, fATSW, "=<ADDRES(hex)>,<DATA(hex)>: Set register"},
